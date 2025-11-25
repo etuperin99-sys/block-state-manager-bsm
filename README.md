@@ -348,6 +348,14 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
+## Contact
+
+- **Email:** etuperin99@gmail.com
+- **GitHub:** [@etuperin99-sys](https://github.com/etuperin99-sys)
+- **Issues:** [GitHub Issues](https://github.com/etuperin99-sys/block-state-manager-bsm/issues)
+
+---
+
 ## Credits
 
 Created by [etuperin99](https://github.com/etuperin99-sys)

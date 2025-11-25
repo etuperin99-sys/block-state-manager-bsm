@@ -549,6 +549,19 @@ plugins/block-state-manager/src/blocks/display/</code></pre>
                 </a>
             </div>
         </div>
+
+        <div class="bsm-card">
+            <h2>Contact</h2>
+            <p>Questions, feedback, or collaboration inquiries:</p>
+            <div class="bsm-links">
+                <a href="mailto:etuperin99@gmail.com">
+                    <span class="dashicons dashicons-email"></span> etuperin99@gmail.com
+                </a>
+                <a href="https://github.com/etuperin99-sys" target="_blank">
+                    <span class="dashicons dashicons-admin-users"></span> @etuperin99-sys
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -5,10 +5,13 @@
  * Description: React-style global state management for Gutenberg editor and frontend
  * Version: 0.1.0
  * Author: etuperin99
+ * Author URI: https://github.com/etuperin99-sys
  * License: MIT
  * Text Domain: block-state-manager
  * Requires at least: 6.0
  * Requires PHP: 7.4
+ *
+ * Contact: etuperin99@gmail.com
  */
 
 defined('ABSPATH') || exit;
