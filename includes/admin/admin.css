@@ -1,0 +1,292 @@
+/* BSM Admin Page Styles */
+
+.bsm-admin-wrap {
+    max-width: 1200px;
+    margin: 20px 20px 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.bsm-admin-wrap * {
+    box-sizing: border-box;
+}
+
+/* Header */
+.bsm-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.bsm-header h1 {
+    margin: 0 0 10px;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.bsm-header p {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.bsm-version {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-top: 15px;
+}
+
+/* Navigation Tabs */
+.bsm-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 30px;
+}
+
+.bsm-tab {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+}
+
+.bsm-tab:hover {
+    color: #667eea;
+}
+
+.bsm-tab.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+/* Tab Content */
+.bsm-tab-content {
+    display: none;
+}
+
+.bsm-tab-content.active {
+    display: block;
+}
+
+/* Cards */
+.bsm-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.bsm-card h2 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+.bsm-card h3 {
+    margin: 30px 0 15px;
+    font-size: 16px;
+    color: #333;
+}
+
+.bsm-card h3:first-child {
+    margin-top: 0;
+}
+
+.bsm-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Code blocks */
+.bsm-code {
+    background: #2d2d2d;
+    border-radius: 6px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.bsm-code-header {
+    background: #1a1a1a;
+    padding: 8px 15px;
+    font-size: 12px;
+    color: #888;
+    border-bottom: 1px solid #444;
+}
+
+.bsm-code pre {
+    margin: 0;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+.bsm-code code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Info boxes */
+.bsm-info {
+    background: #f0f6fc;
+    border-left: 4px solid #667eea;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.bsm-info-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.bsm-warning {
+    background: #fff8e6;
+    border-left-color: #f0b429;
+}
+
+.bsm-success {
+    background: #e6ffed;
+    border-left-color: #28a745;
+}
+
+/* Grid */
+.bsm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Feature list */
+.bsm-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bsm-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.bsm-features li:last-child {
+    border-bottom: none;
+}
+
+.bsm-features .dashicons {
+    color: #28a745;
+    margin-top: 2px;
+}
+
+/* API Reference table */
+.bsm-api-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.bsm-api-table th,
+.bsm-api-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.bsm-api-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.bsm-api-table code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+/* Demo section */
+.bsm-demo-blocks {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.bsm-demo-blocks p {
+    margin-bottom: 20px;
+}
+
+.bsm-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #667eea;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.bsm-btn:hover {
+    background: #5a6fd6;
+    color: #fff;
+}
+
+/* Links */
+.bsm-links {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.bsm-links a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #667eea;
+    text-decoration: none;
+}
+
+.bsm-links a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .bsm-admin-wrap {
+        margin: 10px;
+    }
+
+    .bsm-header {
+        padding: 25px;
+    }
+
+    .bsm-header h1 {
+        font-size: 24px;
+    }
+
+    .bsm-tabs {
+        flex-wrap: wrap;
+    }
+
+    .bsm-tab {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}

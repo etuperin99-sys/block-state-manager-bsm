@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block State Manager (BSM) - Documentation</title>
+    <meta name="description" content="React-style global state management for WordPress Gutenberg blocks">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a6fd6;
+            --secondary: #764ba2;
+            --text: #333;
+            --text-light: #666;
+            --bg: #f8f9fa;
+            --white: #fff;
+            --border: #e1e4e8;
+            --code-bg: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--bg);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .header p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .header-badges {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .header-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--primary);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+            overflow-x: auto;
+        }
+
+        .nav a {
+            padding: 16px 24px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        section {
+            margin-bottom: 80px;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h3 {
+            font-size: 22px;
+            margin: 40px 0 16px;
+            color: var(--text);
+        }
+
+        h4 {
+            font-size: 18px;
+            margin: 30px 0 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-light);
+        }
+
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        p code,
+        li code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .code-header {
+            background: #1a1a1a;
+            color: #888;
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -8px;
+        }
+
+        .code-header + pre {
+            border-radius: 0 0 8px 8px;
+            margin-top: 0;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        /* Info boxes */
+        .info {
+            background: #f0f6fc;
+            border-left: 4px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .info p {
+            margin: 0;
+        }
+
+        .warning {
+            background: #fff8e6;
+            border-left-color: #f0b429;
+        }
+
+        .success {
+            background: #e6ffed;
+            border-left-color: #28a745;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+
+        /* Features */
+        .feature {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .feature h4 {
+            margin: 0 0 8px;
+        }
+
+        .feature p {
+            margin: 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--code-bg);
+            color: #aaa;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer a {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header p {
+                font-size: 16px;
+            }
+
+            h2 {
+                font-size: 26px;
+            }
+
+            .nav a {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Block State Manager</h1>
+        <p>React-style global state management for WordPress Gutenberg blocks</p>
+        <div class="header-badges">
+            <span class="badge">WordPress 6.0+</span>
+            <span class="badge">PHP 7.4+</span>
+            <span class="badge">MIT License</span>
+        </div>
+        <div class="header-buttons">
+            <a href="https://github.com/etuperin99/block-state-manager-bsm" class="btn btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                GitHub
+            </a>
+            <a href="#getting-started" class="btn btn-secondary">Get Started</a>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#overview" class="active">Overview</a>
+            <a href="#getting-started">Getting Started</a>
+            <a href="#api">API Reference</a>
+            <a href="#examples">Examples</a>
+            <a href="#demo">Demo Blocks</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>BSM (Block State Manager) is a developer library that brings modern React-style state management to WordPress Gutenberg blocks. It solves the fundamental problem of cross-block communication.</p>
+
+            <div class="grid">
+                <div class="feature">
+                    <div class="feature-icon">🔗</div>
+                    <div>
+                        <h4>Global State</h4>
+                        <p>One shared state accessible by all blocks on the page</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div>
+                        <h4>Instant Sync</h4>
+                        <p>No REST API calls - state updates instantly across blocks</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎣</div>
+                    <div>
+                        <h4>React Hooks</h4>
+                        <p>Familiar useState-like API for easy adoption</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🖥️</div>
+                    <div>
+                        <h4>Editor + Frontend</h4>
+                        <p>Works in Gutenberg editor and published pages</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>The Problem</h3>
+            <p>Gutenberg blocks are isolated by design. They can't easily share data or communicate with each other. Traditional solutions require REST API calls (slow, server load) or complex custom event systems (error-prone).</p>
+
+            <h3>The Solution</h3>
+            <pre><code class="language-jsx">// Block A sets state
+const [count, setCount] = useBlockState('app/counter', 0);
+setCount(5);
+
+// Block B (anywhere on the page) sees the same state immediately
+const [count] = useBlockState('app/counter', 0);
+// count === 5 - instantly, no API calls!</code></pre>
+        </section>
+
+        <section id="getting-started">
+            <h2>Getting Started</h2>
+
+            <h3>Installation</h3>
+            <div class="code-header">Terminal</div>
+            <pre><code class="language-bash">cd wp-content/plugins
+git clone https://github.com/etuperin99/block-state-manager-bsm.git block-state-manager
+cd block-state-manager
+npm install
+npm run build</code></pre>
+
+            <p>Then activate the plugin in WordPress admin.</p>
+
+            <h3>Basic Usage</h3>
+            <p>Import the hook in your custom block:</p>
+
+            <div class="code-header">your-block/edit.js</div>
+            <pre><code class="language-jsx">import { useBlockState } from 'bsm-store';
+
+const Edit = () => {
+    const [count, setCount] = useBlockState('myapp/counter', 0);
+
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Count: {count}&lt;/p&gt;
+            &lt;button onClick={() => setCount(c => c + 1)}&gt;+&lt;/button&gt;
+        &lt;/div&gt;
+    );
+};</code></pre>
+
+            <h3>Add Dependency</h3>
+            <p>Ensure your block loads after BSM:</p>
+
+            <div class="code-header">block.json</div>
+            <pre><code class="language-json">{
+    "editorScript": "file:./index.js",
+    "editorDependencies": ["bsm-store"]
+}</code></pre>
+
+            <div class="info success">
+                <div class="info-title">That's it!</div>
+                <p>Any block using the same state key will automatically stay in sync. When one updates, all others see the change immediately.</p>
+            </div>
+        </section>
+
+        <section id="api">
+            <h2>API Reference</h2>
+
+            <div class="card">
+                <h3><code>useBlockState(key, initialValue)</code></h3>
+                <p>Primary hook for reading and writing state. Similar to React's useState but global.</p>
+
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>key</code></td>
+                        <td>string</td>
+                        <td>Unique identifier (use namespace/name format)</td>
+                    </tr>
+                    <tr>
+                        <td><code>initialValue</code></td>
+                        <td>any</td>
+                        <td>Default value if state doesn't exist</td>
+                    </tr>
+                </table>
+
+                <p><strong>Returns:</strong> <code>[value, setValue, helpers]</code></p>
+
+                <pre><code class="language-jsx">const [user, setUser, helpers] = useBlockState('app/user', { name: '' });
+
+// Set value
+setUser({ name: 'John' });
+
+// Functional update
+setUser(prev => ({ ...prev, age: 30 }));
+
+// Helpers
+helpers.reset();        // Reset to initial value
+helpers.remove();       // Delete this key
+helpers.update({...});  // Partial object merge
+helpers.isInitial;      // Boolean</code></pre>
+            </div>
+
+            <div class="card">
+                <h3><code>useBlockStateValue(key, defaultValue)</code></h3>
+                <p>Read-only hook for observing state without modifying it.</p>
+                <pre><code class="language-jsx">const count = useBlockStateValue('app/counter', 0);</code></pre>
+            </div>
+
+            <div class="card">
+                <h3><code>useBlockStates(keysWithDefaults)</code></h3>
+                <p>Read multiple state values at once.</p>
+                <pre><code class="language-jsx">const state = useBlockStates({
+    'form/name': '',
+    'form/email': '',
+    'form/step': 0
+});
+console.log(state['form/name']);</code></pre>
+            </div>
+
+            <div class="card">
+                <h3><code>useBlockStateDispatch()</code></h3>
+                <p>Direct access to dispatch functions.</p>
+                <pre><code class="language-jsx">const { setState, setMultiple, deleteKey, resetState } = useBlockStateDispatch();
+
+setState('app/counter', 5);
+setMultiple({ 'app/a': 1, 'app/b': 2 });</code></pre>
+            </div>
+
+            <div class="card">
+                <h3>Direct Store Access</h3>
+                <pre><code class="language-jsx">import { bsmSelect, bsmDispatch, bsmSubscribe } from 'bsm-store';
+
+bsmSelect().getState('key');
+bsmDispatch().setState('key', value);
+bsmSubscribe(() => console.log('State changed'));</code></pre>
+            </div>
+
+            <div class="card">
+                <h3>PHP Functions</h3>
+                <pre><code class="language-php">// Set initial state for frontend
+bsm_set_initial_state('shop/cart', $cart_data);
+
+// Get state value
+$value = bsm_get_state('key', $default);</code></pre>
+            </div>
+        </section>
+
+        <section id="examples">
+            <h2>Examples</h2>
+
+            <h3>Shopping Cart</h3>
+            <pre><code class="language-jsx">// Product Block
+const ProductBlock = ({ product }) => {
+    const [cart, setCart] = useBlockState('shop/cart', []);
+
+    return (
+        &lt;button onClick={() => setCart(c => [...c, product])}&gt;
+            Add to Cart
+        &lt;/button&gt;
+    );
+};
+
+// Cart Block - reads same state
+const CartBlock = () => {
+    const [cart] = useBlockState('shop/cart', []);
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+    return (
+        &lt;div&gt;
+            &lt;p&gt;{cart.length} items&lt;/p&gt;
+            &lt;p&gt;Total: ${total}&lt;/p&gt;
+        &lt;/div&gt;
+    );
+};</code></pre>
+
+            <h3>Search + Results</h3>
+            <pre><code class="language-jsx">// Search Block
+const SearchBlock = () => {
+    const [filters, setFilters] = useBlockState('search/filters', {
+        query: '',
+        category: 'all'
+    });
+
+    return (
+        &lt;input
+            value={filters.query}
+            onChange={e => setFilters(f => ({...f, query: e.target.value}))}
+        /&gt;
+    );
+};
+
+// Results Block - automatically updates when filters change
+const ResultsBlock = () => {
+    const filters = useBlockStateValue('search/filters', {});
+    // Render filtered results...
+};</code></pre>
+
+            <h3>Multi-Step Form</h3>
+            <pre><code class="language-jsx">// All form step blocks share this state
+const [form, setForm] = useBlockState('form/application', {
+    step: 1,
+    name: '',
+    email: '',
+    message: ''
+});
+
+// Step 1: Name input
+// Step 2: Email input
+// Step 3: Message input
+// Summary: Shows all collected data</code></pre>
+
+            <h3>Gallery + Lightbox</h3>
+            <pre><code class="language-jsx">// Gallery Block
+const GalleryBlock = ({ images }) => {
+    const [, setLightbox] = useBlockState('gallery/lightbox', {
+        open: false,
+        index: 0
+    });
+
+    return images.map((img, i) => (
+        &lt;img
+            src={img.thumb}
+            onClick={() => setLightbox({ open: true, index: i })}
+        /&gt;
+    ));
+};
+
+// Lightbox Block - separate block
+const LightboxBlock = ({ images }) => {
+    const [lb, setLb] = useBlockState('gallery/lightbox', {
+        open: false,
+        index: 0
+    });
+
+    if (!lb.open) return null;
+
+    return (
+        &lt;div className="lightbox"&gt;
+            &lt;img src={images[lb.index].full} /&gt;
+            &lt;button onClick={() => setLb(l => ({...l, open: false}))}&gt;
+                Close
+            &lt;/button&gt;
+        &lt;/div&gt;
+    );
+};</code></pre>
+        </section>
+
+        <section id="demo">
+            <h2>Demo Blocks</h2>
+            <p>BSM includes three demo blocks to demonstrate the shared state functionality:</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>BSM Counter</h4>
+                    <p>Add multiple counter blocks to a page. They all share the same count - clicking + in one updates all of them.</p>
+                </div>
+                <div class="card">
+                    <h4>BSM Shared Input</h4>
+                    <p>An input field that broadcasts its value to all BSM Display blocks.</p>
+                </div>
+                <div class="card">
+                    <h4>BSM Display</h4>
+                    <p>Shows text from BSM Shared Input blocks in real-time.</p>
+                </div>
+            </div>
+
+            <div class="info">
+                <div class="info-title">Try it yourself</div>
+                <p>Search for "BSM" in the Gutenberg block inserter to find the demo blocks.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Block State Manager (BSM) - MIT License</p>
+        <p>Created by <a href="https://github.com/etuperin99">etuperin99</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js"></script>
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

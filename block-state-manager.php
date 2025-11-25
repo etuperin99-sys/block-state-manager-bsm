@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Block State Manager (BSM)
- * Plugin URI: https://gitlab.com/etuperin99/block-state-manager-bsm
+ * Plugin URI: https://github.com/etuperin99/block-state-manager-bsm
  * Description: React-style global state management for Gutenberg editor and frontend
  * Version: 0.1.0
  * Author: etuperin99
@@ -35,6 +35,68 @@ class BlockStateManager {
         add_action('init', [$this, 'register_blocks']);
         add_action('enqueue_block_editor_assets', [$this, 'enqueue_editor_assets']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);
+        add_action('admin_menu', [$this, 'add_admin_menu']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+    }
+
+    /**
+     * Add admin menu page
+     */
+    public function add_admin_menu() {
+        add_menu_page(
+            'Block State Manager',
+            'BSM',
+            'manage_options',
+            'block-state-manager',
+            [$this, 'render_admin_page'],
+            'dashicons-database',
+            100
+        );
+    }
+
+    /**
+     * Enqueue admin page assets
+     */
+    public function enqueue_admin_assets($hook) {
+        if ($hook !== 'toplevel_page_block-state-manager') {
+            return;
+        }
+
+        wp_enqueue_style(
+            'bsm-admin',
+            BSM_PLUGIN_URL . 'includes/admin/admin.css',
+            [],
+            BSM_VERSION
+        );
+
+        // Syntax highlighting for code examples
+        wp_enqueue_style(
+            'prism-css',
+            'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css',
+            [],
+            '1.29.0'
+        );
+        wp_enqueue_script(
+            'prism-js',
+            'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js',
+            [],
+            '1.29.0',
+            true
+        );
+        wp_enqueue_script(
+            'prism-jsx',
+            'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js',
+            ['prism-js'],
+            '1.29.0',
+            true
+        );
+    }
+
+    /**
+     * Render admin page
+     */
+    public function render_admin_page() {
+        include BSM_PLUGIN_DIR . 'includes/admin/admin-page.php';
     }
 
     /**

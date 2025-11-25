@@ -1,247 +1,358 @@
 # Block State Manager (BSM)
 
-## React-style Global State for Gutenberg Editor and Frontend
+[![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Version:** 0.1-RFC
-**Purpose:** Bring a modern, centralized state (store) to the Gutenberg ecosystem, enabling blocks to communicate with each other without manual events, prop-drilling, or REST/Custom API updates.
+**React-style global state management for Gutenberg blocks**
 
----
-
-## 1. Background and Problem
-
-Gutenberg blocks were not originally designed to share state with each other. Because of this:
-
-* Each block primarily manages its own state
-* Synchronization between multiple blocks is complex
-* E.g., gallery → lightbox → fullscreen → thumbnails never natively know about each other
-
-### Practical Bottlenecks
-
-| Problem | Explanation |
-|---------|-------------|
-| No global state architecture | Blocks are isolated |
-| Prop-drilling | Data flows only up-down within own block hierarchy |
-| REST endpoint required | All cross-block logic moves to PHP → REST → JS |
-| No reactivity | Other blocks don't know when something changes |
-| Inexperienced devs can't build complex UI | Gutenberg doesn't offer React-context / global store pattern |
-
-BSM solves all of this.
+BSM brings modern state management to WordPress Gutenberg, enabling blocks to share and synchronize state without REST API calls or complex event systems.
 
 ---
 
-## 2. Solution: Block State Manager (BSM)
+## Table of Contents
 
-BSM is:
+- [The Problem](#the-problem)
+- [The Solution](#the-solution)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [API Reference](#api-reference)
+- [Examples](#examples)
+- [Demo Blocks](#demo-blocks)
+- [Documentation Site](#documentation-site)
+- [Contributing](#contributing)
+- [License](#license)
 
-* Gutenberg's global state engine
-* React Context + Redux-inspired architecture
-* Works in both editor and frontend
-* Synchronizes state in real-time between all blocks
-* Enables cross-block communication without API calls
+---
 
-### BSM Core Concept
+## The Problem
 
-```js
-const [state, setState] = useBlockState('namespace/key', {
-    initialValue: { open: false, index: 0 }
-});
+Gutenberg blocks are isolated by design. They can't easily communicate with each other:
+
+| Challenge | Traditional Solution | Issues |
+|-----------|---------------------|--------|
+| Cross-block data sharing | REST API calls | Slow, server load |
+| Real-time sync | Custom events | Complex, error-prone |
+| Shared state | Prop drilling | Only works in hierarchy |
+| Reactive updates | Manual subscriptions | Boilerplate code |
+
+## The Solution
+
+BSM provides a **global state store** that any block can read from and write to:
+
+```jsx
+// Block A sets state
+const [count, setCount] = useBlockState('app/counter', 0);
+setCount(5);
+
+// Block B (anywhere on the page) sees the same state immediately
+const [count] = useBlockState('app/counter', 0);
+// count === 5
 ```
 
-A block can:
-
-* Listen to global state
-* Update it
-* React to changes like a React hook
+**Key benefits:**
+- One shared state for all blocks
+- Instant synchronization (no API calls)
+- Familiar React hooks API
+- Works in editor and frontend
+- Built on WordPress Data API
 
 ---
 
-## 3. Architecture
+## Installation
 
-### 3.1. Store + Actions (Redux-lite)
+### From GitHub
 
-#### Store
-
-* One shared "object tree"
-* Shared between all blocks and all instances
-* Stored within Gutenberg's Data API (wp.data)
-
-#### Actions
-
-* Every state update goes through a single, immutable update
-* Guarantees predictability
-
-#### Selectors
-
-* Blocks can easily read state
-
-#### Subscribers
-
-* React to changes without prop-drilling
-
-### 3.2. React Hook API
-
-```js
-const [cart, setCart] = useBlockState('shop/cart', { items: [] });
+```bash
+cd wp-content/plugins
+git clone https://github.com/etuperin99/block-state-manager-bsm.git block-state-manager
+cd block-state-manager
+npm install
+npm run build
 ```
 
+### Manual Installation
+
+1. Download the latest release
+2. Upload to `wp-content/plugins/block-state-manager`
+3. Activate in WordPress admin
+
 ---
 
-## 4. Use Cases
+## Quick Start
 
-### 4.1. Map + Search Field + Listing Block
+### 1. Import the Hook
 
-**Without BSM:** All communication via REST API or custom events.
-**With BSM:** State is automatically shared between blocks.
-
-* Search field updates state: `searchTerm`
-* Map reads `searchTerm` and fetches pins
-* Listing block renders items automatically
-
-### 4.2. Gallery + Lightbox + Slider
-
-* Lightbox knows which image is selected
-* Gallery updates `activeIndex`
-* Slider reacts to the same index
-* Everything stays in sync
-
-### 4.3. Multi-step Forms
-
-* Step 1, Step 2, and summary block
-* All share the same state
-
-```js
-useBlockState('form/user', { name: '', email: '' });
+```jsx
+import { useBlockState } from 'bsm-store';
 ```
 
----
+### 2. Use in Your Block
 
-## 5. Technical Benefits
+```jsx
+const Edit = () => {
+    const [count, setCount] = useBlockState('myapp/counter', 0);
 
-### 5.1. No REST Endpoints for Every Small Change
-
-State flows directly between blocks → backend load decreases significantly.
-
-### 5.2. Gutenberg Becomes React
-
-BSM brings:
-
-* Context-style architecture
-* Redux/Signals-level global state management
-* Modern JS development pattern to WordPress
-
-### 5.3. Better Performance
-
-* No unnecessary renders
-* No unnecessary AJAX / REST calls
-* Reactive data directly in memory
-
----
-
-## 6. Editor + Frontend Consistency
-
-BSM works in:
-
-1. Gutenberg editor
-2. Frontend (as hydratable)
-
-State can be:
-
-* Serialized via `post_meta` or `block attributes`
-* Init-loaded to frontend
-* Combined into one unified state
-
----
-
-## 7. Code Example: Simple Store
-
-### 1. Register Store
-
-```js
-wp.data.registerStore('bsm/store', {
-    reducer(state = {}, action) {
-        switch (action.type) {
-            case 'SET_STATE':
-                return { ...state, [action.key]: action.value };
-        }
-        return state;
-    },
-    actions: {
-        setState(key, value) {
-            return { type: 'SET_STATE', key, value };
-        }
-    },
-    selectors: {
-        getState(state, key) {
-            return state[key];
-        },
-    }
-});
-```
-
-### 2. Hook
-
-```js
-export function useBlockState(key, initialValue) {
-    const value = useSelect(select =>
-        select('bsm/store').getState(key) ?? initialValue,
-        [key]
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(c => c + 1)}>+</button>
+        </div>
     );
+};
+```
 
-    const setValue = (newValue) => {
-        dispatch('bsm/store').setState(key, newValue);
-    };
+### 3. Add Dependency
 
-    return [value, setValue];
+In your block's `block.json`:
+
+```json
+{
+    "editorScript": "file:./index.js",
+    "editorDependencies": ["bsm-store"]
 }
 ```
 
----
+Or in PHP:
 
-## 8. Why This Would Be a Historic Update for Gutenberg
-
-### 8.1. WordPress UI Development Moves to Modern Era
-
-Gutenberg doesn't have a modern state management layer.
-
-### 8.2. Complex Applications Finally Within Blocks
-
-* Maps
-* Marketplaces
-* Dashboards
-* Timelines
-* Live visualizations
-
-### 8.3. WordPress Becomes Competitive
-
-Wix | Webflow | Builder.io → all have global reactive state.
-WordPress doesn't. BSM fixes this.
+```php
+wp_register_script(
+    'my-block',
+    plugin_dir_url(__FILE__) . 'build/index.js',
+    ['bsm-store', 'wp-blocks', 'wp-element'],
+    '1.0.0'
+);
+```
 
 ---
 
-## 9. Next Steps
+## API Reference
 
-1. Write RFC to GitHub
-2. Implement prototype plugin
-3. Build 2–3 block examples
-4. Pitch to:
-   * Gutenberg Core team
-   * Automattic
-   * Hosts (WP Engine, Kinsta)
-   * Seravo
+### `useBlockState(key, initialValue)`
+
+Primary hook for reading and writing state.
+
+```jsx
+const [value, setValue, helpers] = useBlockState('namespace/key', defaultValue);
+
+// Read
+console.log(value);
+
+// Write
+setValue(newValue);
+
+// Functional update
+setValue(prev => ({ ...prev, updated: true }));
+
+// Helpers
+helpers.reset();         // Reset to initial value
+helpers.remove();        // Delete from state
+helpers.update({...});   // Partial object merge
+helpers.isInitial;       // Boolean
+```
+
+### `useBlockStateValue(key, defaultValue)`
+
+Read-only hook for observing state.
+
+```jsx
+const count = useBlockStateValue('app/counter', 0);
+```
+
+### `useBlockStates(keysWithDefaults)`
+
+Read multiple state values.
+
+```jsx
+const state = useBlockStates({
+    'form/name': '',
+    'form/email': '',
+    'form/step': 0
+});
+```
+
+### `useBlockStateDispatch()`
+
+Direct access to dispatch functions.
+
+```jsx
+const { setState, setMultiple, deleteKey, resetState } = useBlockStateDispatch();
+```
+
+### Direct Store Access
+
+```jsx
+import { bsmSelect, bsmDispatch, bsmSubscribe, STORE_NAME } from 'bsm-store';
+
+bsmSelect().getState('key');
+bsmDispatch().setState('key', value);
+bsmSubscribe(callback);
+```
+
+### PHP Functions
+
+```php
+// Set initial state for frontend hydration
+bsm_set_initial_state('shop/cart', $cart_data);
+
+// Get state (requires state sync)
+$value = bsm_get_state('key', $default);
+```
 
 ---
 
-## 10. Summary
+## Examples
 
-BSM:
+### Shopping Cart
 
-* Solves Gutenberg's biggest architectural problem
-* Enables modern React-style development for blocks
-* Reduces REST load
-* Creates the foundation for WordPress's future UI development
+```jsx
+// Product Block
+const ProductBlock = ({ product }) => {
+    const [cart, setCart] = useBlockState('shop/cart', []);
+
+    return (
+        <button onClick={() => setCart(c => [...c, product])}>
+            Add to Cart
+        </button>
+    );
+};
+
+// Cart Block (reads same state)
+const CartBlock = () => {
+    const [cart] = useBlockState('shop/cart', []);
+    return <div>Items: {cart.length}</div>;
+};
+```
+
+### Search + Results
+
+```jsx
+// Search Block
+const SearchBlock = () => {
+    const [query, setQuery] = useBlockState('search/query', '');
+    return <input value={query} onChange={e => setQuery(e.target.value)} />;
+};
+
+// Results Block
+const ResultsBlock = () => {
+    const query = useBlockStateValue('search/query', '');
+    // Filter/display results based on query
+};
+```
+
+### Multi-Step Form
+
+```jsx
+const [form, setForm] = useBlockState('form/data', {
+    step: 1,
+    name: '',
+    email: ''
+});
+
+// Step 1, Step 2, Summary blocks all use same state
+```
+
+### Gallery + Lightbox
+
+```jsx
+// Gallery
+const [, setLightbox] = useBlockState('gallery/lightbox', { open: false, index: 0 });
+<img onClick={() => setLightbox({ open: true, index: i })} />
+
+// Lightbox
+const [lightbox, setLightbox] = useBlockState('gallery/lightbox', { open: false, index: 0 });
+if (lightbox.open) return <Lightbox index={lightbox.index} />;
+```
+
+---
+
+## Demo Blocks
+
+BSM includes three demo blocks:
+
+| Block | Description |
+|-------|-------------|
+| **BSM Counter** | Multiple counters sharing same count |
+| **BSM Shared Input** | Input that broadcasts to Display blocks |
+| **BSM Display** | Shows text from Shared Input blocks |
+
+Find them in the Gutenberg block inserter by searching "BSM".
+
+---
+
+## Documentation Site
+
+Full documentation available at:
+
+**[https://etuperin99.github.io/block-state-manager-bsm](https://etuperin99.github.io/block-state-manager-bsm)**
+
+Or access the built-in documentation in WordPress Admin → BSM.
+
+---
+
+## State Key Convention
+
+Use namespaced keys to avoid conflicts:
+
+```jsx
+// Good
+useBlockState('shop/cart', [])
+useBlockState('myapp/settings', {})
+
+// Avoid
+useBlockState('data', {})
+useBlockState('value', '')
+```
+
+---
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Development build with watch
+npm start
+
+# Production build
+npm run build
+
+# Lint
+npm run lint:js
+npm run lint:css
+```
+
+---
+
+## Requirements
+
+- WordPress 6.0+
+- PHP 7.4+
+- Node.js 16+ (for development)
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ---
 
 ## License
 
-MIT
+MIT License - see [LICENSE](LICENSE) file.
+
+---
+
+## Credits
+
+Created by [etuperin99](https://github.com/etuperin99)
+
+Built with:
+- WordPress Data API (`wp.data`)
+- React Hooks
+- @wordpress/scripts
