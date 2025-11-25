@@ -1,0 +1,35 @@
+.wp-block-bsm-display {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 20px;
+}
+
+.bsm-display__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.bsm-display__description {
+    margin: 0 0 16px;
+    color: #666;
+    font-size: 13px;
+}
+
+.bsm-display__output {
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+    font-size: 18px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+
+.bsm-display__placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-style: italic;
+}

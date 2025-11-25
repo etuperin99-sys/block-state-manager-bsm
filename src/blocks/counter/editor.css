@@ -1,0 +1,36 @@
+.bsm-counter {
+    text-align: center;
+    padding: 20px;
+}
+
+.bsm-counter__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.bsm-counter__description {
+    margin: 0 0 20px;
+    color: #666;
+    font-size: 13px;
+}
+
+.bsm-counter__display {
+    margin-bottom: 20px;
+}
+
+.bsm-counter__value {
+    font-size: 48px;
+    font-weight: 700;
+    color: #007cba;
+}
+
+.bsm-counter__buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.bsm-counter__buttons .components-button {
+    min-width: 50px;
+}

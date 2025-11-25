@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "bsm/counter",
+    "version": "0.1.0",
+    "title": "BSM Counter",
+    "category": "widgets",
+    "icon": "plus-alt",
+    "description": "A counter block that shares state with other counter blocks via BSM",
+    "keywords": ["counter", "bsm", "state"],
+    "supports": {
+        "html": false,
+        "align": false
+    },
+    "textdomain": "block-state-manager",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "render": "file:./render.php",
+    "viewScript": "file:./view.js"
+}

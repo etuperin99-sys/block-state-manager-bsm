@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "bsm/display",
+    "version": "0.1.0",
+    "title": "BSM Display",
+    "category": "widgets",
+    "icon": "visibility",
+    "description": "Displays text from BSM Shared Input blocks - demonstrates cross-block state reading",
+    "keywords": ["display", "bsm", "state", "output"],
+    "supports": {
+        "html": false,
+        "align": false
+    },
+    "textdomain": "block-state-manager",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "render": "file:./render.php",
+    "viewScript": "file:./view.js"
+}

@@ -1,0 +1,20 @@
+.bsm-shared-input {
+    padding: 20px;
+}
+
+.bsm-shared-input__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.bsm-shared-input__description {
+    margin: 0 0 16px;
+    color: #666;
+    font-size: 13px;
+}
+
+.bsm-shared-input__field input {
+    width: 100%;
+    font-size: 16px;
+}

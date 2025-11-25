@@ -1,0 +1,33 @@
+.wp-block-bsm-shared-input {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 20px;
+}
+
+.bsm-shared-input__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.bsm-shared-input__description {
+    margin: 0 0 16px;
+    color: #666;
+    font-size: 13px;
+}
+
+.bsm-shared-input__field {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.bsm-shared-input__field:focus {
+    outline: none;
+    border-color: #007cba;
+    box-shadow: 0 0 0 1px #007cba;
+}

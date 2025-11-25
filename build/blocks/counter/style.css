@@ -1,0 +1,55 @@
+.wp-block-bsm-counter {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 20px;
+}
+
+.bsm-counter__title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.bsm-counter__description {
+    margin: 0 0 20px;
+    color: #666;
+    font-size: 13px;
+}
+
+.bsm-counter__display {
+    margin-bottom: 20px;
+}
+
+.bsm-counter__value {
+    font-size: 48px;
+    font-weight: 700;
+    color: #007cba;
+}
+
+.bsm-counter__buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.bsm-counter__buttons button {
+    padding: 8px 16px;
+    font-size: 16px;
+    border: 1px solid #007cba;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 50px;
+}
+
+.bsm-counter__buttons button:hover {
+    background: #007cba;
+    color: #fff;
+}
+
+.bsm-counter__buttons button.primary {
+    background: #007cba;
+    color: #fff;
+}

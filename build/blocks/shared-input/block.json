@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "bsm/shared-input",
+    "version": "0.1.0",
+    "title": "BSM Shared Input",
+    "category": "widgets",
+    "icon": "edit",
+    "description": "An input block that shares its value with Display blocks via BSM",
+    "keywords": ["input", "bsm", "state", "form"],
+    "supports": {
+        "html": false,
+        "align": false
+    },
+    "textdomain": "block-state-manager",
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "render": "file:./render.php",
+    "viewScript": "file:./view.js"
+}
