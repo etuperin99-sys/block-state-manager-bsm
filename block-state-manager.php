@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Block State Manager (BSM)
- * Plugin URI: https://github.com/etuperin99/block-state-manager-bsm
+ * Plugin URI: https://github.com/etuperin99-sys/block-state-manager-bsm
  * Description: React-style global state management for Gutenberg editor and frontend
  * Version: 0.1.0
  * Author: etuperin99

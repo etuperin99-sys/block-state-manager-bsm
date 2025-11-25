@@ -65,7 +65,7 @@ const [count] = useBlockState('app/counter', 0);
 
 ```bash
 cd wp-content/plugins
-git clone https://github.com/etuperin99/block-state-manager-bsm.git block-state-manager
+git clone https://github.com/etuperin99-sys-sys/block-state-manager-bsm.git block-state-manager
 cd block-state-manager
 npm install
 npm run build
@@ -284,7 +284,7 @@ Find them in the Gutenberg block inserter by searching "BSM".
 
 Full documentation available at:
 
-**[https://etuperin99.github.io/block-state-manager-bsm](https://etuperin99.github.io/block-state-manager-bsm)**
+**[https://etuperin99-sys.github.io/block-state-manager-bsm](https://etuperin99-sys.github.io/block-state-manager-bsm)**
 
 Or access the built-in documentation in WordPress Admin → BSM.
 
@@ -350,7 +350,7 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ## Credits
 
-Created by [etuperin99](https://github.com/etuperin99)
+Created by [etuperin99](https://github.com/etuperin99-sys)
 
 Built with:
 - WordPress Data API (`wp.data`)

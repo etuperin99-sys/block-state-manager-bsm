@@ -538,13 +538,13 @@ plugins/block-state-manager/src/blocks/display/</code></pre>
         <div class="bsm-card">
             <h2>Resources</h2>
             <div class="bsm-links">
-                <a href="https://github.com/etuperin99/block-state-manager-bsm" target="_blank">
+                <a href="https://github.com/etuperin99-sys/block-state-manager-bsm" target="_blank">
                     <span class="dashicons dashicons-github"></span> GitHub Repository
                 </a>
-                <a href="https://github.com/etuperin99/block-state-manager-bsm#readme" target="_blank">
+                <a href="https://github.com/etuperin99-sys/block-state-manager-bsm#readme" target="_blank">
                     <span class="dashicons dashicons-book"></span> Documentation
                 </a>
-                <a href="https://github.com/etuperin99/block-state-manager-bsm/issues" target="_blank">
+                <a href="https://github.com/etuperin99-sys/block-state-manager-bsm/issues" target="_blank">
                     <span class="dashicons dashicons-warning"></span> Report Issues
                 </a>
             </div>
